@@ -1,3 +1,5 @@
+#include <OctoWS2811.h>
+
 //The WiFi handlers must be enabled in ArtNet.h
 #define ARTNET_ENABLE_WIFI true
 #include "config.h"
@@ -6,7 +8,7 @@
 #include <Artnet.h>
 
 ArtnetWiFiReceiver artnet; 
-Handlers handlers;
+Handlers handlers(OUTPUT_MODE);
 Ota ota;
 
 //Network Config
@@ -26,7 +28,7 @@ void pixel_mapping_subscriber(uint8_t *data, uint16_t size) {
 }
 
 void fixture_subscriber(uint8_t *data, uint16_t size) {
-  handlers.pixel_mapping(data,size);
+  handlers.fixture_channels(data,size);
 }
 
 void setup() {

@@ -33,5 +33,6 @@ Set the following configuration values in config.h before uploading to your micr
 | Fixture Mapping DMX Start Channel | OFFSET_FIXTURE | 0 |
 | LED Strip Length | STRIP_LENGTH | 16 |
 | Fixture Count | FIXTURE_COUNT | 3 |
+| Output Mode | OUTPUT_MODE | OUTPUT_MODE_MOCK |
 | Wifi Network SSID | WIFI_SSID |  |
 | Wifi Password | PASSWORD |  |
