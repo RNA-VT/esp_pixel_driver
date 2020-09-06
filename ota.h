@@ -7,6 +7,7 @@ class Ota
 {
 public:
   void setup();
+  void check();
 };
 
 #endif

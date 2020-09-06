@@ -43,3 +43,7 @@ void Ota::setup(){
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP().toString());
   }
+
+  void Ota::check() {
+    ArduinoOTA.handle();
+  }
