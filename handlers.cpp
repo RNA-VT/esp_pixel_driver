@@ -1,22 +1,18 @@
 #include "handlers.h"
 #include "config.h"
 #include "util.h"
-
-DMAMEM int displayMemory[ledsPerStrip*6];
-int drawingMemory[ledsPerStrip*6];
   
-void Handlers:Handlers(int mode) {
-  if (mode == OUTPUT_MODE_LED) {
-    // OctoWS2811 settings
+Handlers::Handlers(int mode) {
+  this->output_mode = mode;
+  if (his->output_mode == OUTPUT_MODE_LED) {
     const byte numStrips= 1; // change for your setup
-    const int config = WS2811_GRB | WS2811_800kHz;
-    this->leds = OctoWS2811(STRIP_LENGTH, displayMemory, drawingMemory, config);
+    this->pixels = Adafruit_NeoPixel(8, PIXEL_MAPPED_PIN, NEO_GRB + NEO_KHZ800)
   }
 }
 
 void Handlers::setup(){
-  if (mode == OUTPUT_MODE_LED) {
-    this->leds.begin();
+  if (this->output_mode == OUTPUT_MODE_LED) {
+    this->pixels.begin();
   }
 }
 
@@ -30,9 +26,9 @@ void Handlers::pixel_mapping(uint8_t *data, uint16_t size){
     uint8_t r = data[ offset + 1 ];
     uint8_t b = data[ offset + 2 ]; 
 
-    switch(mode) {
+    switch(this->output_mode) {
     case OUTPUT_MODE_LED: 
-      this->leds.setPixel(r,g,b);
+      this->pixels.setPixelColor(i, pixels.Color(r, g, b)); 
       break;
     case OUTPUT_MODE_MOCK:
       char buf[16]; //formatting buffer
@@ -48,7 +44,11 @@ void Handlers::pixel_mapping(uint8_t *data, uint16_t size){
       sprintf(buf, "~~Blue: %u", b);
       Serial.println(buf);
       break;
-  }
+  } 
+}
+if (this->output_mode == OUTPUT_MODE_LED) {
+  this->pixels.show()
+}
 }
 
 void Handlers::fixture_channels(uint8_t *data, uint16_t size) {
@@ -61,24 +61,32 @@ void Handlers::fixture_channels(uint8_t *data, uint16_t size) {
     Serial.println(buf);
 
     uint8_t opacity = data[offset];
-    sprintf(buf, "opacity: %u", opacity);
-    Serial.println(buf);
-
     uint8_t animation = data[offset + 1];
-    sprintf(buf, "animation: %u", animation);
-    Serial.println(buf);
-
     uint8_t animation_sub = data[offset + 2];
-    sprintf(buf, "animation_sub: %u", animation_sub);
-    Serial.println(buf);
-
     uint8_t speed = data[offset + 3];
-    sprintf(buf, "speed: %u", speed);
-    Serial.println(buf);
-
     uint8_t strobe = data[offset + 4];
-    sprintf(buf, "strobe: %u", strobe);
-    Serial.println(buf);
+
+    switch(this->output_mode) {
+      case OUTPUT_MODE_LED:
+        //TODO: Add Animations
+        break; 
+      case OUTPUT_MODE_MOCK: 
+        sprintf(buf, "--opacity: %u", opacity);
+        Serial.println(buf);
+
+        sprintf(buf, "--animation: %u", animation);
+        Serial.println(buf);
+
+        sprintf(buf, "--animation_sub: %u", animation_sub);
+        Serial.println(buf);
+
+        sprintf(buf, "--speed: %u", speed);
+        Serial.println(buf);
+
+        sprintf(buf, "--strobe: %u", strobe);
+        Serial.println(buf);
+        break;
+    }
   }
 }
 
