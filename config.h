@@ -7,8 +7,6 @@
 #define UNIVERSE_FIXTURE 2 //DMX Universe to listen in
 #define OFFSET_FIXTURE 0 //DMX Start Channel
 
-#define PIXELS_PER_CHANNEL 3
-
 //Sensitive Config
 #define WIFI_SSID "Secret"
 #define PASSWORD "Secret"

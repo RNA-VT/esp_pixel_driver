@@ -2,14 +2,15 @@
 #include "config.h"
 
 void Handlers::pixel_mapping(uint8_t *data, uint16_t size){
-  int pixels_received = size / PIXELS_PER_CHANNEL;
+  const int pixels_per_channel = 3;
+  int pixels_received = size / pixels_per_channel;
   
   for (int i=0; i< pixels_received; i++ ) {
     //The order of the colors may vary by ArtNet source. 
     //We assume GRB here
-    uint8_t r = data[i * 3 + 1];
-    uint8_t g = data[i * 3];
-    uint8_t b = data[i * 3 + 2]; 
+    uint8_t r = data[i * pixels_per_channel + 1];
+    uint8_t g = data[i * pixels_per_channel];
+    uint8_t b = data[i * pixels_per_channel + 2]; 
     
     char buf[16]; //formatting buffer
     sprintf(buf, "Pixel ID: %u", i);
@@ -27,7 +28,7 @@ void Handlers::pixel_mapping(uint8_t *data, uint16_t size){
 }
 
 void Handlers::fixture_channels(uint8_t *data, uint16_t size) {
-  int channels = 5;
+  const int channels = 5;
   uint16_t fixtures = size/channels;
   char buf[16]; //formatting buffer
 
