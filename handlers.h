@@ -1,11 +1,11 @@
 #ifndef HANDLERS_H
 #define HANDLERS_H
 
-#define PIXEL_MAPPED_PIN D8
-
+#include <Adafruit_NeoPixel.h>
 #include <Artnet.h> //needed for types
 #include "config.h"
-#include <Adafruit_NeoPixel.h>
+
+#define PIXEL_MAPPED_PIN D8
 
 class Handlers {
   public:
