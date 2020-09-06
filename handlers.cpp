@@ -39,13 +39,13 @@ void Handlers::pixel_mapping(uint8_t *data, uint16_t size){
       sprintf(buf, "Pixel ID: %u", i);
       Serial.println(buf);
     
-      sprintf(buf, "Green: %u", g);
+      sprintf(buf, "~~Green: %u", g);
       Serial.println(buf);
     
-      sprintf(buf, "Red: %u", r);
+      sprintf(buf, "~~Red: %u", r);
       Serial.println(buf);
     
-      sprintf(buf, "Blue: %u", b);
+      sprintf(buf, "~~Blue: %u", b);
       Serial.println(buf);
       break;
   }

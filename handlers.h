@@ -6,6 +6,8 @@
 
 class Handlers {
   public:
+    void Handlers(int mode);
+    void setup();
     void pixel_mapping(uint8_t *data, uint16_t size);
     void fixture_channels(uint8_t *data, uint16_t size);
   private:
