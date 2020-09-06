@@ -3,13 +3,13 @@
 
 void Handlers::pixel_mapping(uint8_t *data, uint16_t size){
   const int pixels_per_channel = 3;
-  
+  const int offset = OFFSET_PIXEL_MAPPING + i * pixels_per_channel;
   for (int i=0; i< STRIP_LENGTH; i++ ) {
     //The order of the colors may vary by ArtNet source. 
     //We assume GRB here
-    uint8_t r = data[i * pixels_per_channel + 1];
-    uint8_t g = data[i * pixels_per_channel];
-    uint8_t b = data[i * pixels_per_channel + 2]; 
+    uint8_t g = data[ offset ];
+    uint8_t r = data[ offset + 1 ];
+    uint8_t b = data[ offset + 2 ]; 
     
     char buf[16]; //formatting buffer
     sprintf(buf, "Pixel ID: %u", i);
@@ -31,7 +31,7 @@ void Handlers::fixture_channels(uint8_t *data, uint16_t size) {
   char buf[16]; //formatting buffer
 
   for (int i=0; i< FIXTURE_COUNT; ++i) {
-    int offset = channels * i;
+    int offset = OFFSET_FIXTURE + channels * i;
     sprintf(buf, "Fixture ID: %u", i);
     Serial.println(buf);
 
