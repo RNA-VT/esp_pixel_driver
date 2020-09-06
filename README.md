@@ -9,7 +9,7 @@ Receivers for 2 types of ArtNet/DMX data are demonstrated
 
 ## Pixel Mapped Data
 
-The pixel mapping receiver expects 3 channel (GRB) color data to be directly applied to particular pixel outputs
+The pixel mapping receiver expects 3 channel (GRB) color data to be directly applied to particular pixel outputs.
 
 ## Fixture Configuration
 
@@ -21,8 +21,6 @@ The fixture receiver expects 5 channels of data
 - speed
 - strobe
 
-This example assumes you are broadcasting to 3 fixtures in the same universe with no offset between them.
-
 ## Usage
 
 Set the following configuration values in config.h before uploading to your microcontroller
@@ -33,6 +31,7 @@ Set the following configuration values in config.h before uploading to your micr
 | Pixel Mapping DMX Start Channel |OFFSET_PIXEL_MAPPING | 0 |
 | Fixture Universe Id | UNIVERSE_FIXTURE | 2 |
 | Fixture Mapping DMX Start Channel | OFFSET_FIXTURE | 0 |
+| LED Strip Length | STRIP_LENGTH | 16 |
+| Fixture Count | FIXTURE_COUNT | 3 |
 | Wifi Network SSID | WIFI_SSID |  |
 | Wifi Password | PASSWORD |  |
-
