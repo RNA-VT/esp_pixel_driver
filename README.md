@@ -25,7 +25,7 @@ The fixture receiver expects 5 channels of data
 
 Set the following configuration values in config.h before uploading to your microcontroller
 
-| Parameter                             | Variable                            | Description                                                                  |
+| Parameter                             | Variable                            | Default                                                                  |
 |---------------------------------------|-------------------------------------|------------------------------------------------------------------------------|
 | Pixel Mapping Universe Id | UNIVERSE_PIXEL_MAPPING | 1 |
 | Pixel Mapping DMX Start Channel |OFFSET_PIXEL_MAPPING | 0 |
