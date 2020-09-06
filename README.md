@@ -5,7 +5,7 @@ Example Wifi Artnet Receiver for the ESP 8266
 ## Usage
 
 Set the following configuration values in config.h before uploading to your microcontroller
-|---------------------------------------|-------------------------------------|------------------------------------------------------------------------------|
+
 | Parameter                             | Variable                            | Description                                                                  |
 |---------------------------------------|-------------------------------------|------------------------------------------------------------------------------|
 | Pixel Mapping Universe Id | UNIVERSE_PIXEL_MAPPING | 1 |
@@ -14,4 +14,4 @@ Set the following configuration values in config.h before uploading to your micr
 | Fixture Mapping DMX Start Channel | OFFSET_FIXTURE | 0 |
 | Wifi Network SSID | WIFI_SSID |  |
 | Wifi Password | PASSWORD |  |
-|---------------------------------------|-------------------------------------|------------------------------------------------------------------------------|
+
