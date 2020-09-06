@@ -26,7 +26,7 @@ void pixel_mapping_subscriber(uint8_t *data, uint16_t size) {
 }
 
 void fixture_subscriber(uint8_t *data, uint16_t size) {
-  handlers.pixel_mapping(data,size);
+  handlers.fixture_channels(data,size);
 }
 
 void setup() {
