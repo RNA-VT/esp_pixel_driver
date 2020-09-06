@@ -12,6 +12,7 @@ Set the following configuration values in config.h before uploading to your micr
 | Pixel Mapping DMX Start Channel |OFFSET_PIXEL_MAPPING | 0 |
 | Fixture Universe Id | UNIVERSE_FIXTURE | 2 |
 | Fixture Mapping DMX Start Channel | OFFSET_FIXTURE | 0 |
+| LED Strip Length | STRIP_LENGTH | 16 |
+| Fixture Count | FIXTURE_COUNT | 3 |
 | Wifi Network SSID | WIFI_SSID |  |
 | Wifi Password | PASSWORD |  |
-
