@@ -1,11 +1,13 @@
 //The WiFi handlers must be enabled in ArtNet.h
 #define ARTNET_ENABLE_WIFI true
 #include "config.h"
+#include "ota.h"
 #include "handlers.h"
 #include <Artnet.h>
 
 ArtnetWiFiReceiver artnet; 
 Handlers handlers;
+Ota ota;
 
 //Network Config
 const IPAddress ip(192,168,1,201);
@@ -37,6 +39,7 @@ void setup() {
 }
 
 void loop() {
+  ota.check();
   artnet.parse();
   delay(50);
 }
