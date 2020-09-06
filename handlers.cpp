@@ -29,7 +29,7 @@ void Handlers::pixel_mapping(uint8_t *data, uint16_t size){
 
 void Handlers::fixture_channels(uint8_t *data, uint16_t size) {
   const int channels = 5;
-  uint16_t fixtures = size/channels;
+  uint16_t fixtures = 3;
   char buf[16]; //formatting buffer
 
   for (int i=0; i< fixtures; ++i) {
