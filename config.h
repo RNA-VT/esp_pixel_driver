@@ -8,7 +8,7 @@
 #define OFFSET_FIXTURE 0 //DMX Start Channel
 
 //Sensitive Config
-#define WIFI_SSID "Secret"
-#define PASSWORD "Secret"
+#define WIFI_SSID "The Quiet Neighbor"
+#define PASSWORD "AllAboutThatBase"
 
 #endif
