@@ -76,10 +76,7 @@ void Handlers::fixture_channels(uint8_t *data, uint16_t size)
     switch (this->output_mode)
     {
     case OUTPUT_MODE_LED:
-      //TODO: Select animation using animation & animation_sub
-      //TODO: Calculate current values based on speed, strobe & opacity
-      //TODO: Loop through pixels and set current values
-      //TODO: Show Pixels
+      //TODO: Set Fixture object config to new values
       break;
     case OUTPUT_MODE_MOCK:
       mockFixture(opacity, animation, animation_sub, speed, strobe);

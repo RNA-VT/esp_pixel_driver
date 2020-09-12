@@ -55,4 +55,5 @@ void loop()
 {
   ota.check();
   artnet.parse();
+  //TODO: Execute Fixture Animation here
 }
