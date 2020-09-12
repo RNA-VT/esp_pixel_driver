@@ -9,13 +9,13 @@
 #define UNIVERSE_FIXTURE 2 //DMX Universe to listen in
 #define OFFSET_FIXTURE 0 //DMX Start Channel
 
-#define STRIP_LENGTH 16
+#define STRIP_LENGTH 30
 #define FIXTURE_COUNT 3
 
-#define OUTPUT_MODE OUTPUT_MODE_MOCK
+#define OUTPUT_MODE OUTPUT_MODE_LED
 
 //Sensitive Config
-#define WIFI_SSID "Secret"
-#define PASSWORD "Secret"
+#define WIFI_SSID "The Quiet Neighbor"
+#define PASSWORD "AllAboutThatBase"
 
 #endif

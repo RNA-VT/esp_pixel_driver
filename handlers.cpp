@@ -1,14 +1,16 @@
 #include "handlers.h"
 #include "config.h"
 #include "util.h"
+#include <Adafruit_NeoPixel.h>
 
-Handlers::Handlers(int mode)
+Handlers::Handlers(int mode, Adafruit_NeoPixel *pixels = NULL)
 {
+
   this->output_mode = mode;
   if (this->output_mode == OUTPUT_MODE_LED)
   {
     const byte numStrips = 1; // change for your setup
-    this->pixels = Adafruit_NeoPixel(8, PIXEL_MAPPED_PIN, NEO_GRB + NEO_KHZ800)
+    this->pixels = pixels;
   }
 }
 
@@ -16,8 +18,13 @@ void Handlers::setup()
 {
   if (this->output_mode == OUTPUT_MODE_LED)
   {
-    this->pixels.begin();
+    this->pixels->begin();
   }
+}
+
+int Handlers::getMode()
+{
+  return this->output_mode;
 }
 
 void Handlers::pixel_mapping(uint8_t *data, uint16_t size)
@@ -35,28 +42,18 @@ void Handlers::pixel_mapping(uint8_t *data, uint16_t size)
     switch (this->output_mode)
     {
     case OUTPUT_MODE_LED:
-      this->pixels.setPixelColor(i, pixels.Color(r, g, b));
+      this->pixels->setPixelColor(i, this->pixels->Color(r, g, b));
+      if (pixels->canShow())
+      {
+        pixels->show();
+      }
       break;
     case OUTPUT_MODE_MOCK:
-      char buf[16]; //formatting buffer
-      sprintf(buf, "Pixel ID: %u", i);
-      Serial.println(buf);
-
-      sprintf(buf, "~~Green: %u", g);
-      Serial.println(buf);
-
-      sprintf(buf, "~~Red: %u", r);
-      Serial.println(buf);
-
-      sprintf(buf, "~~Blue: %u", b);
-      Serial.println(buf);
+      mock_output(i, r, g, b);
       break;
     }
   }
-  if (this->output_mode == OUTPUT_MODE_LED)
-  {
-    this->pixels.show()
-  }
+  
 }
 
 void Handlers::fixture_channels(uint8_t *data, uint16_t size)
@@ -70,6 +67,7 @@ void Handlers::fixture_channels(uint8_t *data, uint16_t size)
     sprintf(buf, "Fixture ID: %u", i);
     Serial.println(buf);
 
+    //Parse Next Config Parameters
     uint8_t opacity = data[offset];
     uint8_t animation = data[offset + 1];
     uint8_t animation_sub = data[offset + 2];
@@ -79,23 +77,13 @@ void Handlers::fixture_channels(uint8_t *data, uint16_t size)
     switch (this->output_mode)
     {
     case OUTPUT_MODE_LED:
-      //TODO: Add Animations
+      //TODO: Select animation using animation & animation_sub
+      //TODO: Calculate current values based on speed, strobe & opacity
+      //TODO: Loop through pixels and set current values
+      //TODO: Show Pixels
       break;
     case OUTPUT_MODE_MOCK:
-      sprintf(buf, "--opacity: %u", opacity);
-      Serial.println(buf);
-
-      sprintf(buf, "--animation: %u", animation);
-      Serial.println(buf);
-
-      sprintf(buf, "--animation_sub: %u", animation_sub);
-      Serial.println(buf);
-
-      sprintf(buf, "--speed: %u", speed);
-      Serial.println(buf);
-
-      sprintf(buf, "--strobe: %u", strobe);
-      Serial.println(buf);
+      mockFixture(opacity, animation, animation_sub, speed, strobe);
       break;
     }
   }
