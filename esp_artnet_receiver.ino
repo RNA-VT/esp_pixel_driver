@@ -33,11 +33,13 @@ void setup_wifi()
 
 void pixel_mapping_subscriber(uint8_t *data, uint16_t size)
 {
+  //Pixel Mapped data is color data by pixel to be applied immediatly
   handlers.pixel_mapping(data, size);
 }
 
 void fixture_subscriber(uint8_t *data, uint16_t size)
 {
+  //Fixture data is a set of parameters that configures animation playback
   handlers.fixture_channels(data, size);
 }
 
