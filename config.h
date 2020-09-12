@@ -14,8 +14,11 @@
 
 #define OUTPUT_MODE OUTPUT_MODE_LED
 
-//Sensitive Config
-#define WIFI_SSID "The Quiet Neighbor"
-#define PASSWORD "AllAboutThatBase"
+//Must define:
+/*
+#define WIFI_SSID "hfsjdkf"
+#define PASSWORD "sdjfhdskjfn"
+*/
+#include "secret.h"
 
 #endif

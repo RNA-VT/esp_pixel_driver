@@ -34,6 +34,8 @@ private:
   }
   void mockFixture(uint8_t opacity, uint8_t animation, uint8_t animation_sub, uint8_t speed, uint8_t strobe)
   {
+
+    char buf[16]; //formatting buffer
     sprintf(buf, "--opacity: %u", opacity);
     Serial.println(buf);
 

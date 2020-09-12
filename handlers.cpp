@@ -53,7 +53,6 @@ void Handlers::pixel_mapping(uint8_t *data, uint16_t size)
       break;
     }
   }
-  
 }
 
 void Handlers::fixture_channels(uint8_t *data, uint16_t size)
