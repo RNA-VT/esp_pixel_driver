@@ -9,6 +9,9 @@
 #define UNIVERSE_FIXTURE 2 //DMX Universe to listen in
 #define OFFSET_FIXTURE 0 //DMX Start Channel
 
+#define UNIVERSE_CONFIGURATION 0
+#define OFFSET_CONFIGURATION 0
+
 #define STRIP_LENGTH 30
 #define FIXTURE_COUNT 3
 

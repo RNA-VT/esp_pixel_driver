@@ -2,7 +2,8 @@
 #define ARTNET_ENABLE_WIFI true
 #include "config.h"
 #include "ota.h"
-#include "handlers.h"
+#include "fixture.h"
+#include "pixel_mapped_output.h"
 #include <Artnet.h>
 #include <Adafruit_NeoPixel.h>
 
@@ -11,7 +12,10 @@
 ArtnetWiFiReceiver artnet;
 Ota ota;
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(STRIP_LENGTH, PIN, NEO_GRB + NEO_KHZ800);
-Handlers handlers(OUTPUT_MODE, &pixels);
+
+//Output Objects
+PixelMappedOutput pmo(&pixels);
+Fixture outputFixture(&pixels);
 
 //Network Config
 const IPAddress ip(192, 168, 1, 201);
@@ -33,12 +37,12 @@ void setup_wifi()
 
 void pixel_mapping_subscriber(uint8_t *data, uint16_t size)
 {
-  handlers.pixel_mapping(data, size);
+  pmo.subscriber(data, size);
 }
 
 void fixture_subscriber(uint8_t *data, uint16_t size)
 {
-  handlers.fixture_channels(data, size);
+  outputFixture.subscriber(data, size);
 }
 
 void setup()
@@ -48,12 +52,14 @@ void setup()
   artnet.begin();
   artnet.subscribe(UNIVERSE_PIXEL_MAPPING, pixel_mapping_subscriber);
   artnet.subscribe(UNIVERSE_FIXTURE, fixture_subscriber);
-  handlers.setup();
+  
+  pixels.begin();
+  pixels.clear();
 }
 
 void loop()
 {
   ota.check();
   artnet.parse();
-  //TODO: Execute Fixture Animation here
+  outputFixture.run();
 }
