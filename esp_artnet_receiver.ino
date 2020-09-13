@@ -38,6 +38,7 @@ void setup_wifi()
 void pixel_mapping_subscriber(uint8_t *data, uint16_t size)
 {
   pmo.subscriber(data, size);
+
 }
 
 void fixture_subscriber(uint8_t *data, uint16_t size)
