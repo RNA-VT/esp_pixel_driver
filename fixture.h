@@ -13,14 +13,32 @@ public:
   Fixture(Adafruit_NeoPixel *pxls);
   void updateConfiguration(unsigned char opacity, unsigned char animation, unsigned char subselect, unsigned char speed, unsigned char strobe);
   void subscriber(unsigned char *data, unsigned short size);
-  void mock_output(unsigned char opacity, unsigned char animation, unsigned char subselect, unsigned char speed, unsigned char strobe);
-  unsigned char getOpacity();
   void run();
 
 private:
-  Adafruit_NeoPixel *pixels;
   AnimationOptions options;
-  Animations animations = Animations(pixels, &options);
+  Adafruit_NeoPixel *pixels = NULL;
+  Animations *animations = NULL;
+
+  void mock_output(unsigned char opacity, unsigned char animation, unsigned char option, unsigned char speed, unsigned char strobe)
+  {
+
+    char buf[16]; //formatting buffer
+    sprintf(buf, "--opacity: %u", opacity);
+    Serial.println(buf);
+
+    sprintf(buf, "--animation: %u", animation);
+    Serial.println(buf);
+
+    sprintf(buf, "--animation_sub: %u", option);
+    Serial.println(buf);
+
+    sprintf(buf, "--speed: %u", speed);
+    Serial.println(buf);
+
+    sprintf(buf, "--strobe: %u", strobe);
+    Serial.println(buf);
+  }
 };
 
 #endif

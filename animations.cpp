@@ -12,11 +12,16 @@ Animations::Animations(Adafruit_NeoPixel *pixels, AnimationOptions *opts)
 void Animations::Fill()
 {
   //Fill sets all LEDs on this strip to a single color
-  this->pixels->fill(getSelectedColor());
+  for (uint16_t i = 0; i < STRIP_LENGTH; ++i)
+  {
+    RGB c = getSelectedColor();
+    uint32_t color = this->pixels->Color(c.r, c.g, c.b);
+    this->pixels->setPixelColor(i, color);
+  }
   showAndDelay(100);
 }
 
-void Animations::HueModulation()
+void Animations::ColorWheelCycles()
 {
   //Hue Modulation loops through the color wheel on each pixel
   //option specifies the number of loops through the color wheel
@@ -24,10 +29,10 @@ void Animations::HueModulation()
   {
     for (long startHue = 0; startHue < 65536; startHue += 256)
     {
-      for (int i = 0; i < pixels->numPixels(); i++)
+      for (int i = 0; i < STRIP_LENGTH; i++)
       {
-        int pixelHue = startHue + (i * 65536L / this->pixels->numPixels());
-        pixels->setPixelColor(i, this->pixels->gamma32(this->pixels->ColorHSV(pixelHue)));
+        int pixelHue = startHue + (i * 65536L / STRIP_LENGTH);
+        pixels->setPixelColor(i, pixels->gamma32(pixels->ColorHSV(pixelHue)));
       }
       showAndDelay(100);
     }
@@ -41,9 +46,11 @@ void Animations::TheaterChase()
     for (int b = 0; b < 3; b++)
     {
       pixels->clear();
-      for (int c = b; c < pixels->numPixels(); c += 3)
+      RGB c;
+      for (int i = b; i < STRIP_LENGTH; i += 3)
       {
-        pixels->setPixelColor(c, getSelectedColor());
+        c = getSelectedColor();
+        this->pixels->setPixelColor(i, c.r, c.g, c.b);
       }
       showAndDelay(100);
     }
@@ -52,9 +59,11 @@ void Animations::TheaterChase()
 
 void Animations::Wipe()
 {
-  for (int i = 0; i < pixels->numPixels(); ++i)
+  RGB c;
+  for (int i = 0; i < STRIP_LENGTH; ++i)
   {
-    this->pixels->setPixelColor(i, getSelectedColor());
+    c = getSelectedColor();
+    this->pixels->setPixelColor(i, c.r, c.g, c.b);
     showAndDelay(100);
   }
 }
