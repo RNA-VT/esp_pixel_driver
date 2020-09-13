@@ -3,27 +3,33 @@
 
 #include "Adafruit_NeoPixel.h"
 #include "animation_options.h"
+#include "config.h"
 
 class Animations
 {
 
 public:
+  Animations();
   Animations(Adafruit_NeoPixel *pixels, AnimationOptions *opts);
   void Fill();
   void Wipe();
-  void HueModulation();
+  void ColorWheelCycles();
   void TheaterChase();
 
 private:
   Adafruit_NeoPixel *pixels;
   AnimationOptions *options;
-  void showAndDelay(unsigned char maxDelay){
-    pixels->show();
+  void showAndDelay(unsigned char maxDelay)
+  {
+    if (pixels->canShow())
+    {
+      pixels->show();
+    }
     delay(options->scaleDelay(maxDelay));
   };
-  unsigned int getSelectedColor(){
-    RGB rgb = options->getSelectedColor();
-    return pixels->Color(rgb.r, rgb.g, rgb.b);
+  RGB getSelectedColor()
+  {
+    return options->getSelectedColor();
   }
 };
 

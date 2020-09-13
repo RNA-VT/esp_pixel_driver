@@ -10,11 +10,11 @@ struct RGB {
 class AnimationOptions
 {
 public:
-  unsigned char animation;
-  unsigned char option;
-  unsigned char opacity;
-  unsigned char speed;
-  unsigned char strobe;
+  unsigned char animation = 0;
+  unsigned char option = 0;
+  unsigned char opacity = 0;
+  unsigned char speed = 0;
+  unsigned char strobe = 0;
   unsigned long scaleDelay(unsigned char maxDelay);
   RGB getSelectedColor();
 };

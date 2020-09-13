@@ -2,7 +2,15 @@
 
 Fixture::Fixture(Adafruit_NeoPixel *pxls)
 {
+  AnimationOptions opts;
+  opts.animation = 0;
+  opts.option = 0;
+  opts.opacity = 0;
+  opts.speed = 0;
+  opts.strobe = 0;
+  options = opts;
   pixels = pxls;
+  animations = new Animations(pixels, &options);
 }
 
 void Fixture::updateConfiguration(unsigned char opacity, unsigned char animation, unsigned char subselect, unsigned char speed, unsigned char strobe)
@@ -16,11 +24,6 @@ void Fixture::updateConfiguration(unsigned char opacity, unsigned char animation
   options = opts;
 
   pixels->setBrightness(opacity);
-}
-
-unsigned char Fixture::getOpacity()
-{
-  return options.opacity;
 }
 
 void Fixture::subscriber(unsigned char *data, unsigned short size)
@@ -53,16 +56,20 @@ void Fixture::run()
     switch (static_cast<Animation>(options.animation))
     {
     case fill:
-      this->animations.Fill();
+      Serial.println("Philbert Fullington");
+      animations->Fill();
       break;
     case wipe:
-      this->animations.Wipe();
+      Serial.println("Wanda Vipers");
+      animations->Wipe();
       break;
     case rainbow:
-      this->animations.HueModulation();
+      Serial.println("Hugh Cycles");
+      animations->ColorWheelCycles();
       break;
     case theater_chase:
-      this->animations.TheaterChase();
+      Serial.println("Chase Thesbian");
+      animations->TheaterChase();
       break;
     }
     break;
@@ -72,22 +79,3 @@ void Fixture::run()
   }
 }
 
-void Fixture::mock_output(unsigned char opacity, unsigned char animation, unsigned char option, unsigned char speed, unsigned char strobe)
-{
-
-  char buf[16]; //formatting buffer
-  sprintf(buf, "--opacity: %u", opacity);
-  Serial.println(buf);
-
-  sprintf(buf, "--animation: %u", animation);
-  Serial.println(buf);
-
-  sprintf(buf, "--animation_sub: %u", option);
-  Serial.println(buf);
-
-  sprintf(buf, "--speed: %u", speed);
-  Serial.println(buf);
-
-  sprintf(buf, "--strobe: %u", strobe);
-  Serial.println(buf);
-}
