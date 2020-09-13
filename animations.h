@@ -5,6 +5,10 @@
 #include "animation_options.h"
 #include "config.h"
 
+/* 
+  Animations - this class defines and house helper functions for all animations
+*/
+
 class Animations
 {
 
