@@ -13,6 +13,12 @@ Fixture::Fixture(Adafruit_NeoPixel *pxls)
   animations = new Animations(pixels, &options);
 }
 
+void Fixture::updateConfiguration(AnimationOptions opts)
+{
+  options = opts;
+  pixels->setBrightness(options.opacity);
+}
+
 void Fixture::updateConfiguration(unsigned char opacity, unsigned char animation, unsigned char subselect, unsigned char speed, unsigned char strobe)
 {
   AnimationOptions opts;
