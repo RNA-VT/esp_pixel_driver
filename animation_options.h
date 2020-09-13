@@ -7,6 +7,9 @@ struct RGB {
   unsigned char b;
 };
 
+/*
+  AnimationOptions houses config parameters from an external source
+*/
 class AnimationOptions
 {
 public:

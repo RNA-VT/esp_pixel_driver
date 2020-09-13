@@ -3,19 +3,23 @@
 
 #include "util.h"
 
-#define UNIVERSE_PIXEL_MAPPING 1 //DMX Universe to listen in
-#define OFFSET_PIXEL_MAPPING 0 //DMX Start Channel
+#define OUTPUT_MODE OUTPUT_MODE_MOCK
+#define STRIP_LENGTH 16
 
+// Pixel Mapped Output Configuration
+#define ENABLE_PIXEL_MAPPED_OUTPUT true
+#define PIN_PIXEL_MAPPED_OUTPUT 13 //D7 on the 8266MOD pkg
+#define UNIVERSE_PIXEL_MAPPED 1    //DMX Universe to listen in
+#define OFFSET_PIXEL_MAPPED 0      //DMX Start Channel
+
+// Fixture Output Configuration
+#define ENABLE_FIXTURE false
+#define PIN_FIXTURE_OUTPUT 13 //D7 on the 8266MOD pkg
 #define UNIVERSE_FIXTURE 2 //DMX Universe to listen in
-#define OFFSET_FIXTURE 0 //DMX Start Channel
-
-#define UNIVERSE_CONFIGURATION 0
-#define OFFSET_CONFIGURATION 0
-
-#define STRIP_LENGTH 30
-#define FIXTURE_COUNT 3
-
-#define OUTPUT_MODE OUTPUT_MODE_LED
+#define OFFSET_FIXTURE 0   //DMX Start Channel
+#define FIXTURE_COUNT 1
+#define FIXTURE_SOURCE DATA_SOURCE_ARNET
+#define FIXTURE_SERVER "http://jsonplaceholder.typicode.com/users/1"
 
 //Must define:
 /*

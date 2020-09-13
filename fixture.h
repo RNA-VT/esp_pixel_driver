@@ -11,6 +11,7 @@ class Fixture
 {
 public:
   Fixture(Adafruit_NeoPixel *pxls);
+  void updateConfiguration(AnimationOptions opts);
   void updateConfiguration(unsigned char opacity, unsigned char animation, unsigned char subselect, unsigned char speed, unsigned char strobe);
   void subscriber(unsigned char *data, unsigned short size);
   void run();

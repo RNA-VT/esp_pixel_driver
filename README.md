@@ -1,19 +1,21 @@
-# Esp Artnet Receiver Example
+# Esp Pixel Driver
 
-Example Wifi Artnet Receiver for the ESP 8266 Microcontroller
+LED Pixel Driver for the ESP8266 Microcontroller
 
-Receivers for 2 types of ArtNet/DMX data are demonstrated
+2 mode are available:
 
 - 3 Channel Pixel Mapped LED Data
 - 5 Channel DMX Fixture Configuration
 
-## Pixel Mapped Data
+Both may be enabled, but overlap in pins or DMX addresses will result in unpredictable behavoir.
+<!-- markdownlint-disable MD001 -->
+### Pixel Mapped Artnet Stream
+<!-- markdownlint-enable MD001 -->
+The pixel mapped artnet subscriber expects 3 channels of color data per pixel to be applied directly to particular leds.
 
-The pixel mapping receiver expects 3 channel (GRB) color data to be directly applied to particular pixel outputs.
+### DMX Fixture
 
-## Fixture Configuration
-
-The fixture receiver expects 5 channels of data
+The DMX fixture expects 5 channels of data:
 
 - opacity
 - animation
@@ -21,25 +23,51 @@ The fixture receiver expects 5 channels of data
 - speed
 - strobe
 
-## Usage
+## Configuration
 
-Set the following values before uploading to your microcontroller
+Set the following values in `config.h` before uploading to your microcontroller.
 
-### secret.h
+### Global
+
+| Parameter            | Variable     | Default          |
+| -------------------- | ------------ | ---------------- |
+| Output Mode          | OUTPUT_MODE  | OUTPUT_MODE_MOCK |
+| LED Max Strip Length | STRIP_LENGTH | 16               |
+
+---
+
+### Pixel Mapped Receiver Configuration
+
+| Parameter                      | Variable                   | Default |
+| ------------------------------ | -------------------------- | ------- |
+| Pixel Mapped Output Enable     | ENABLE_PIXEL_MAPPED_OUTPUT | false   |
+| Pixel Mapped Output Pin        | PIN_PIXEL_MAPPED_OUTPUT    | 13      |
+| Pixel Mapped Universe Id       | UNIVERSE_PIXEL_MAPPED      | 1       |
+| Pixel Mapped DMX Start Channel | OFFSET_PIXEL_MAPPED        | 0       |
+
+---
+
+### Fixture Receiver Configuration
+
+| Parameter                 | Variable              | Default                                       |
+| ------------------------- | --------------------- | --------------------------------------------- |
+| Fixture Output Enable     | ENABLE_FIXTURE_OUTPUT | false                                         |
+| Fixture Output Pin        | PIN_FIXTURE_OUTPUT    | 13                                            |
+| Fixture Universe Id       | UNIVERSE_FIXTURE      | 2                                             |
+| Fixture DMX Start Channel | OFFSET_FIXTURE        | 0                                             |
+| Fixture Count             | FIXTURE_COUNT         | 1                                             |
+| Fixture Data Source       | FIXTURE_SOURCE        | DATA_SOURCE_ARNET                             |
+| Fixture Server            | FIXTURE_SERVER        | "http://jsonplaceholder.typicode.com/users/1" |
+
+---
+
+### Secret Config
+
+Create `secret.h` at the root of the repo. `#define` the following values:
 
 | Parameter         | Variable  |
 | ----------------- | --------- |
 | Wifi Network SSID | WIFI_SSID |
 | Wifi Password     | PASSWORD  |
 
-### config.h
-
-| Parameter                         | Variable               | Default          |
-| --------------------------------- | ---------------------- | ---------------- |
-| Pixel Mapping Universe Id         | UNIVERSE_PIXEL_MAPPING | 1                |
-| Pixel Mapping DMX Start Channel   | OFFSET_PIXEL_MAPPING   | 0                |
-| Fixture Universe Id               | UNIVERSE_FIXTURE       | 2                |
-| Fixture Mapping DMX Start Channel | OFFSET_FIXTURE         | 0                |
-| LED Strip Length                  | STRIP_LENGTH           | 16               |
-| Fixture Count                     | FIXTURE_COUNT          | 3                |
-| Output Mode                       | OUTPUT_MODE            | OUTPUT_MODE_MOCK |
+---
