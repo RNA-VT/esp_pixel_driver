@@ -10,7 +10,6 @@
 #include <esp8266httpclient.h>
 #include <ArduinoJson.h>
 
-#define PIN 13 //D7 on the 8266MOD pkg
 
 ArtnetWiFiReceiver artnet;
 Ota ota;
@@ -19,6 +18,8 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(STRIP_LENGTH, PIN, NEO_GRB + NEO_KH
 
 //Output Objects
 PixelMappedOutput pmo(&pixels);
+
+
 Fixture outputFixture(&pixels);
 
 //Network Config

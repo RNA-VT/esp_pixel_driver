@@ -7,8 +7,10 @@ LED Pixel Driver for the ESP8266 Microcontroller
 - 3 Channel Pixel Mapped LED Data
 - 5 Channel DMX Fixture Configuration
 
+Both may be enabled, but overlap in pins or DMX addresses will result in unpredictable behavoir.
+<!-- markdownlint-disable MD001 -->
 ### Pixel Mapped Data Receiver
-
+<!-- markdownlint-enable MD001 -->
 The pixel mapped data receiver expects 3 channel (GRB) color data to be directly applied to particular pixel outputs.
 
 ### DMX Lighting Fixture
@@ -25,12 +27,16 @@ The lighting fixture expects 5 channels of data:
 
 Set the following values in `config.h` before uploading to your microcontroller.
 
+### Global
+
 | Parameter            | Required           | Variable     | Default          |
 | -------------------- | ------------------ | ------------ | ---------------- |
 | Output Mode          | :heavy_check_mark: | OUTPUT_MODE  | OUTPUT_MODE_MOCK |
 | LED Max Strip Length | :heavy_check_mark: | STRIP_LENGTH | 16               |
 
 ---
+
+### Pixel Mapped Receiver Configuration
 
 | Parameter                      | Required           | Variable                   | Default |
 | ------------------------------ | ------------------ | -------------------------- | ------- |
@@ -40,6 +46,8 @@ Set the following values in `config.h` before uploading to your microcontroller.
 | Pixel Mapped DMX Start Channel |                    | OFFSET_PIXEL_MAPPED        | 0       |
 
 ---
+
+### Fixture Receiver Configuration
 
 | Parameter                 | Required           | Variable              | Default                                       |
 | ------------------------- | ------------------ | --------------------- | --------------------------------------------- |
