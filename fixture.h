@@ -10,7 +10,7 @@
 class Fixture
 {
 public:
-  Fixture(Adafruit_NeoPixel *pxls);
+  Fixture(Adafruit_NeoPixel pxls);
   void updateConfiguration(AnimationOptions opts);
   void updateConfiguration(unsigned char opacity, unsigned char animation, unsigned char subselect, unsigned char speed, unsigned char strobe);
   void subscriber(unsigned char *data, unsigned short size);
@@ -18,7 +18,7 @@ public:
 
 private:
   AnimationOptions options;
-  Adafruit_NeoPixel *pixels = NULL;
+  Adafruit_NeoPixel pixels = NULL;
   Animations *animations = NULL;
 
   void mock_output(unsigned char opacity, unsigned char animation, unsigned char option, unsigned char speed, unsigned char strobe)

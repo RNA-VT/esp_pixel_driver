@@ -14,26 +14,26 @@ class Animations
 
 public:
   Animations();
-  Animations(Adafruit_NeoPixel *pixels, AnimationOptions *opts);
+  Animations(Adafruit_NeoPixel pixels, AnimationOptions opts);
   void Fill();
   void Wipe();
   void ColorWheelCycles();
   void TheaterChase();
 
 private:
-  Adafruit_NeoPixel *pixels;
-  AnimationOptions *options;
+  Adafruit_NeoPixel pixels;
+  AnimationOptions options;
   void showAndDelay(unsigned char maxDelay)
   {
-    if (pixels->canShow())
+    if (pixels.canShow())
     {
-      pixels->show();
+      pixels.show();
     }
-    delay(options->scaleDelay(maxDelay));
+    delay(options.scaleDelay(maxDelay));
   };
   RGB getSelectedColor()
   {
-    return options->getSelectedColor();
+    return options.getSelectedColor();
   }
 };
 

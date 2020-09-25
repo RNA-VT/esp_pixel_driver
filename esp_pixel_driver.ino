@@ -14,11 +14,31 @@ ArtnetWiFiReceiver artnet;
 Ota ota;
 HTTPClient http;
 
-Adafruit_NeoPixel *pixels_mapped = NULL;
-PixelMappedOutput *pmo = NULL;
 
-Adafruit_NeoPixel *pixels_fixture = NULL;
-Fixture *fixture = NULL;
+Adafruit_NeoPixel gpio0 = Adafruit_NeoPixel(STRIP_LENGTH, 0, NEO_GRB + NEO_KHZ800);
+//Adafruit_NeoPixel gpio1 = Adafruit_NeoPixel(STRIP_LENGTH, 1, NEO_GRB + NEO_KHZ800);
+//Adafruit_NeoPixel gpio2 = Adafruit_NeoPixel(STRIP_LENGTH, 2, NEO_GRB + NEO_KHZ800);
+//Adafruit_NeoPixel gpio3 = Adafruit_NeoPixel(STRIP_LENGTH, 3, NEO_GRB + NEO_KHZ800);
+//Adafruit_NeoPixel gpio4 = Adafruit_NeoPixel(STRIP_LENGTH, 4, NEO_GRB + NEO_KHZ800);
+//Adafruit_NeoPixel gpio5 = Adafruit_NeoPixel(STRIP_LENGTH, 5, NEO_GRB + NEO_KHZ800);
+//Adafruit_NeoPixel gpio6 = Adafruit_NeoPixel(STRIP_LENGTH, 6, NEO_GRB + NEO_KHZ800);
+//Adafruit_NeoPixel gpio7 = Adafruit_NeoPixel(STRIP_LENGTH, 7, NEO_GRB + NEO_KHZ800);
+//Adafruit_NeoPixel gpio8 = Adafruit_NeoPixel(STRIP_LENGTH, 8, NEO_GRB + NEO_KHZ800);
+//Adafruit_NeoPixel gpio9 = Adafruit_NeoPixel(STRIP_LENGTH, 9, NEO_GRB + NEO_KHZ800);
+//Adafruit_NeoPixel gpio10 = Adafruit_NeoPixel(STRIP_LENGTH, 10, NEO_GRB + NEO_KHZ800);
+//Adafruit_NeoPixel gpio11 = Adafruit_NeoPixel(STRIP_LENGTH, 11, NEO_GRB + NEO_KHZ800);
+//Adafruit_NeoPixel gpio12 = Adafruit_NeoPixel(STRIP_LENGTH, 12, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel gpio13 = Adafruit_NeoPixel(STRIP_LENGTH, 13, NEO_GRB + NEO_KHZ800);
+//Adafruit_NeoPixel gpio14 = Adafruit_NeoPixel(STRIP_LENGTH, 14, NEO_GRB + NEO_KHZ800);
+//Adafruit_NeoPixel gpio15 = Adafruit_NeoPixel(STRIP_LENGTH, 15, NEO_GRB + NEO_KHZ800);
+//Adafruit_NeoPixel gpio16 = Adafruit_NeoPixel(STRIP_LENGTH, 16, NEO_GRB + NEO_KHZ800);
+
+Adafruit_NeoPixel pixels_mapped = gpio13;
+Adafruit_NeoPixel pixels_fixture = gpio0;
+
+//
+PixelMappedOutput *pmo;
+Fixture *fixture;
 
 //Network Config
 const IPAddress ip(192, 168, 1, 201);
@@ -55,14 +75,14 @@ void setup()
 
   if (ENABLE_PIXEL_MAPPED_OUTPUT)
   {
-    pixels_mapped = new Adafruit_NeoPixel(STRIP_LENGTH, PIN_PIXEL_MAPPED_OUTPUT, NEO_GRB + NEO_KHZ800);
-    pmo = new PixelMappedOutput(pixels_mapped);
+    PixelMappedOutput output(pixels_mapped);
+    pmo = &output;
   }
 
   if (ENABLE_FIXTURE)
   {
-    pixels_fixture = new Adafruit_NeoPixel(STRIP_LENGTH, PIN_FIXTURE_OUTPUT, NEO_GRB + NEO_KHZ800);
-    fixture = new Fixture(pixels_fixture);
+    //Fixture fxt(pixels_fixture);
+    //fixture = &fxt;
   }
 
   if (ENABLE_PIXEL_MAPPED_OUTPUT || (ENABLE_FIXTURE && (FIXTURE_SOURCE == DATA_SOURCE_ARNET)))
@@ -72,15 +92,15 @@ void setup()
 
   if (ENABLE_PIXEL_MAPPED_OUTPUT)
   {
-    pixels_mapped->begin();
-    pixels_mapped->clear();
+    pixels_mapped.begin();
+    pixels_mapped.clear();
     artnet.subscribe(UNIVERSE_PIXEL_MAPPED, pixel_mapping_subscriber);
   }
 
   if (ENABLE_FIXTURE && (FIXTURE_SOURCE == DATA_SOURCE_ARNET))
   {
-    pixels_fixture->begin();
-    pixels_fixture->clear();
+    pixels_fixture.begin();
+    pixels_fixture.clear();
     artnet.subscribe(UNIVERSE_FIXTURE, fixture_subscriber);
   }
 }
@@ -88,27 +108,28 @@ void setup()
 void loop()
 {
   ota.check();
-  if (ENABLE_FIXTURE)
-  {
-    fixture->run();
-  }
+  Inputs();
+  Outputs();
+  delay(10);
 }
 
 void Inputs()
 {
+  if (ENABLE_PIXEL_MAPPED_OUTPUT || (ENABLE_FIXTURE && (FIXTURE_SOURCE == DATA_SOURCE_ARNET)))
+  {
+    artnet.parse();
+  }
+  else if (ENABLE_FIXTURE && FIXTURE_SOURCE == DATA_SOURCE_SERVER)
+  {
+    LoadConfigFromServer();
+  }
+}
+
+void Outputs()
+{
   if (ENABLE_FIXTURE)
   {
-    switch (FIXTURE_SOURCE)
-    {
-    case DATA_SOURCE_ARNET:
-      artnet.parse();
-      break;
-    case DATA_SOURCE_SERVER:
-      LoadConfigFromServer();
-      break;
-    default:
-      break;
-    }
+    //fixture->run();
   }
 }
 
@@ -131,6 +152,6 @@ void LoadConfigFromServer()
     opts.option = doc["option"];
     opts.speed = doc["speed"];
     opts.strobe = doc["strobe"];
-    fixture->updateConfiguration(opts);
+    //fixture->updateConfiguration(opts);
   }
 }

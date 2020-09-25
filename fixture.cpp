@@ -1,35 +1,32 @@
 #include "fixture.h"
+  
+AnimationOptions opts;
 
-Fixture::Fixture(Adafruit_NeoPixel *pxls)
+Fixture::Fixture(Adafruit_NeoPixel pxls)
 {
-  AnimationOptions opts;
   opts.animation = 0;
   opts.option = 0;
   opts.opacity = 0;
   opts.speed = 0;
   opts.strobe = 0;
-  options = opts;
-  pixels = pxls;
-  animations = new Animations(pixels, &options);
+  animations = new Animations(pxls, opts);
 }
 
 void Fixture::updateConfiguration(AnimationOptions opts)
 {
   options = opts;
-  pixels->setBrightness(options.opacity);
+  pixels.setBrightness(options.opacity);
 }
 
 void Fixture::updateConfiguration(unsigned char opacity, unsigned char animation, unsigned char subselect, unsigned char speed, unsigned char strobe)
 {
-  AnimationOptions opts;
-  opts.animation = animation;
-  opts.option = subselect;
-  opts.opacity = opacity;
-  opts.speed = speed;
-  opts.strobe = strobe;
-  options = opts;
+  options.animation = animation;
+  options.option = subselect;
+  options.opacity = opacity;
+  options.speed = speed;
+  options.strobe = strobe;
 
-  pixels->setBrightness(opacity);
+  pixels.setBrightness(opacity);
 }
 
 void Fixture::subscriber(unsigned char *data, unsigned short size)
@@ -49,8 +46,8 @@ void Fixture::subscriber(unsigned char *data, unsigned short size)
     unsigned char animation_sub = data[offset + 2];
     unsigned char speed = data[offset + 3];
     unsigned char strobe = data[offset + 4];
-
-    updateConfiguration(opacity, animation, animation_sub, speed, strobe);
+    Serial.println("blergh");
+    //updateConfiguration(opacity, animation, animation_sub, speed, strobe);
   }
 }
 

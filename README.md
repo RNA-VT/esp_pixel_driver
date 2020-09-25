@@ -41,7 +41,6 @@ Set the following values in `config.h` before uploading to your microcontroller.
 | Parameter                      | Variable                   | Default |
 | ------------------------------ | -------------------------- | ------- |
 | Pixel Mapped Output Enable     | ENABLE_PIXEL_MAPPED_OUTPUT | false   |
-| Pixel Mapped Output Pin        | PIN_PIXEL_MAPPED_OUTPUT    | 13      |
 | Pixel Mapped Universe Id       | UNIVERSE_PIXEL_MAPPED      | 1       |
 | Pixel Mapped DMX Start Channel | OFFSET_PIXEL_MAPPED        | 0       |
 
@@ -52,12 +51,15 @@ Set the following values in `config.h` before uploading to your microcontroller.
 | Parameter                 | Variable              | Default                                       |
 | ------------------------- | --------------------- | --------------------------------------------- |
 | Fixture Output Enable     | ENABLE_FIXTURE_OUTPUT | false                                         |
-| Fixture Output Pin        | PIN_FIXTURE_OUTPUT    | 13                                            |
 | Fixture Universe Id       | UNIVERSE_FIXTURE      | 2                                             |
 | Fixture DMX Start Channel | OFFSET_FIXTURE        | 0                                             |
 | Fixture Count             | FIXTURE_COUNT         | 1                                             |
 | Fixture Data Source       | FIXTURE_SOURCE        | DATA_SOURCE_ARNET                             |
 | Fixture Server            | FIXTURE_SERVER        | "http://jsonplaceholder.typicode.com/users/1" |
+
+### Pins
+
+Select your gpio outputs by uncommenting and setting the pointers `pixels_mapped` & `pixels_fixture` in `esp_pixel_driver.ino`.
 
 ---
 
