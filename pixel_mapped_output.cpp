@@ -1,6 +1,6 @@
 #include "pixel_mapped_output.h"
 
-PixelMappedOutput::PixelMappedOutput(Adafruit_NeoPixel pixels)
+PixelMappedOutput::PixelMappedOutput(Adafruit_NeoPixel *pixels)
 {
   this->pixels = pixels;
 }
@@ -20,10 +20,10 @@ void PixelMappedOutput::subscriber(uint8_t *data, uint16_t size)
     switch (OUTPUT_MODE)
     {
     case OUTPUT_MODE_LED:
-      this->pixels.setPixelColor(i, this->pixels.Color(r, g, b));
-      if (pixels.canShow())
+      this->pixels->setPixelColor(i, this->pixels->Color(r, g, b));
+      if (pixels->canShow())
       {
-        pixels.show();
+        pixels->show();
       }
       break;
     case OUTPUT_MODE_MOCK:

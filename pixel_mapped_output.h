@@ -11,11 +11,11 @@
 class PixelMappedOutput
 {
 public:
-  PixelMappedOutput(Adafruit_NeoPixel pixels);
+  PixelMappedOutput(Adafruit_NeoPixel *pixels);
   void subscriber(uint8_t *data, uint16_t size);
   
 private:
-  Adafruit_NeoPixel pixels;
+  Adafruit_NeoPixel *pixels;
   void mock_output(int i, uint8_t r, uint8_t g, uint8_t b)
   {
     char buf[16]; //formatting buffer
