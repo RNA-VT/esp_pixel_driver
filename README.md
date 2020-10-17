@@ -12,15 +12,8 @@ Both may be enabled, but overlap in pins or DMX addresses will result in unpredi
 
 The pixel mapped artnet subscriber expects 3 channels of color data per pixel to be applied directly to particular leds.
 
-### DMX Fixture
-
-The DMX fixture expects 5 channels of data:
-
-- opacity
-- animation
-- animation subselect
-- speed
-- strobe
+| <-- Pixel Start Channel \
+| `Green` | `Red` | `Blue` |
 
 ## Configuration
 
