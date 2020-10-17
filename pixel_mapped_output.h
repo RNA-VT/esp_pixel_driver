@@ -4,16 +4,14 @@
 #include <Adafruit_NeoPixel.h>
 #include <Artnet.h> //needed for types
 #include "config.h"
-#include "fixture.h"
 #include "util.h"
-#include <Adafruit_NeoPixel.h>
 
 class PixelMappedOutput
 {
 public:
   PixelMappedOutput(Adafruit_NeoPixel *pixels);
   void subscriber(uint8_t *data, uint16_t size);
-  
+
 private:
   Adafruit_NeoPixel *pixels;
   void mock_output(int i, uint8_t r, uint8_t g, uint8_t b)
