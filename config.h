@@ -3,7 +3,7 @@
 
 #include "util.h"
 
-#define OUTPUT_MODE OUTPUT_MODE_LED
+#define OUTPUT_MODE OUTPUT_MODE_MOCK
 #define STRIP_LENGTH 16
 
 // Pixel Mapped Output Configuration
