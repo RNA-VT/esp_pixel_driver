@@ -2,7 +2,6 @@
 #define ARTNET_ENABLE_WIFI true
 #include "config.h"
 #include "ota.h"
-#include "fixture.h"
 #include "pixel_mapped_output.h"
 #include <Artnet.h>
 #include <Adafruit_NeoPixel.h>
@@ -52,7 +51,7 @@ void setup_wifi()
 
 void pixel_mapping_subscriber(uint8_t *data, uint16_t size)
 {
-  pmo->subscriber(data, size);
+  pmo.subscriber(data, size);
 }
 
 void setup()
@@ -61,8 +60,8 @@ void setup()
   setup_wifi();
 
   artnet.begin();
-  pixels_mapped.begin();
-  pixels_mapped.clear();
+  pixels_mapped->begin();
+  pixels_mapped->clear();
   artnet.subscribe(UNIVERSE_PIXEL_MAPPED, pixel_mapping_subscriber);
 }
 
