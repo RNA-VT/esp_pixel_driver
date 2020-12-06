@@ -45,8 +45,6 @@ void setup_wifi()
   delay(500);
   char* zone = "pixeldriver69";
 
-  Serial.println("URL:");
-  Serial.println(zone);
   //Multicast DNS
   if (!MDNS.begin(zone)) {             
     Serial.println("Error setting up MDNS responder!");
