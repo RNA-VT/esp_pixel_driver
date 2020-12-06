@@ -43,8 +43,12 @@ void setup_wifi()
   Serial.println("WiFi connected, IP = ");
   Serial.println(WiFi.localIP());
   delay(500);
+  char* zone = "pixeldriver69";
+
+  Serial.println("URL:");
+  Serial.println(zone);
   //Multicast DNS
-  if (!MDNS.begin("idplaceholder.pixel.driver")) {             
+  if (!MDNS.begin(zone)) {             
     Serial.println("Error setting up MDNS responder!");
   }
   Serial.println("mDNS responder started");
@@ -63,7 +67,7 @@ void setup()
 
   pixels.begin();
   pixels.clear();
-  
+
   artnet.begin();
   artnet.subscribe(UNIVERSE_PIXEL_MAPPED, pixel_mapping_subscriber);
 }
