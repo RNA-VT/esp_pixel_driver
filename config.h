@@ -3,11 +3,10 @@
 
 #include "util.h"
 
-#define OUTPUT_MODE OUTPUT_MODE_MOCK
-#define STRIP_LENGTH 16
+#define OUTPUT_MODE OUTPUT_MODE_LED
+#define STRIP_LENGTH 150
 
 // Pixel Mapped Output Configuration
-#define ENABLE_PIXEL_MAPPED_OUTPUT false
 #define UNIVERSE_PIXEL_MAPPED 1 //DMX Universe to listen in
 #define OFFSET_PIXEL_MAPPED 0 //DMX Start Channel
 
