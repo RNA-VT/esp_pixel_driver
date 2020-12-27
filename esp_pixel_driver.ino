@@ -40,7 +40,7 @@ const IPAddress subnet(255, 255, 255, 0);
 
 void setup_wifi()
 {
-  WiFi.begin("The Quiet Neighbor", "AllAboutThatBase");
+  WiFi.begin(WIFI_SSID, PASSWORD);
   WiFi.setSleep(false);
   WiFi.config(ip, gateway, subnet);
   int loop_limit = 60;
