@@ -1,8 +1,6 @@
 # Esp Pixel Driver
 
-LED Pixel Driver for the ESP8266 Microcontroller supporting 3 Channel Pixel Mapped LED Data.
-
-Both may be enabled, but overlap in pins or DMX addresses will result in unpredictable behavoir.
+Artnet LED Pixel Driver for the ESP8266 & ESP32 Microcontrollers.
 
 <!-- markdownlint-disable MD001 -->
 
@@ -21,8 +19,8 @@ Set the following values in `config.h` before uploading to your microcontroller.
 
 | Parameter                      | Variable                   | Default          |
 | ------------------------------ | -------------------------- | ---------------- |
-| Output Mode                    | OUTPUT_MODE                | OUTPUT_MODE_MOCK |
-| LED Max Strip Length           | STRIP_LENGTH               | 16               |
+| Output Mode                    | OUTPUT_MODE                | OUTPUT_MODE_LED  |
+| LED Max Strip Length           | STRIP_LENGTH               | 25               |
 | Pixel Mapped Output Enable     | ENABLE_PIXEL_MAPPED_OUTPUT | false            |
 | Pixel Mapped Universe Id       | UNIVERSE_PIXEL_MAPPED      | 1                |
 | Pixel Mapped DMX Start Channel | OFFSET_PIXEL_MAPPED        | 0                |
@@ -31,7 +29,7 @@ Set the following values in `config.h` before uploading to your microcontroller.
 
 ### Pins
 
-Select your gpio outputs by uncommenting and setting the pointers `pixels_mapped` in `esp_pixel_driver.ino`.
+Select your gpio outputs by uncommenting and setting the pointer `pixels_mapped` in `esp_pixel_driver.ino`.
 
 ---
 
