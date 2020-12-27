@@ -4,7 +4,7 @@
 #include "util.h"
 
 #define OUTPUT_MODE OUTPUT_MODE_LED
-#define STRIP_LENGTH 150
+#define STRIP_LENGTH 25
 
 // Pixel Mapped Output Configuration
 #define UNIVERSE_PIXEL_MAPPED 1 //DMX Universe to listen in
@@ -18,3 +18,4 @@
 #include "secret.h"
 
 #endif
+ 

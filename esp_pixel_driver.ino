@@ -77,7 +77,7 @@ void pixel_mapping_subscriber(const uint8_t *data, const uint16_t size)
     switch (OUTPUT_MODE)
     {
     case OUTPUT_MODE_LED:
-      pixels->setPixelColor(i, pixels->Color(r, g, b));
+      pixels->setPixelColor(i, pixels->Color(g, r, b));
       if (pixels->canShow())
       {
         pixels->show();
@@ -99,7 +99,11 @@ void setup()
   pixels->begin();
   pixels->clear();
   
+  status(0);
+
   setup_wifi();
+  
+  status(1);
 
   artnet.begin();
   artnet.subscribe(UNIVERSE_PIXEL_MAPPED, pixel_mapping_subscriber);
@@ -111,7 +115,7 @@ void loop()
   delay(10);
 }
 
-/*
+
 void status(uint8_t state)
 {
   const int pixels_per_channel = 3;
@@ -140,7 +144,7 @@ void status(uint8_t state)
     switch (OUTPUT_MODE)
     {
     case OUTPUT_MODE_LED:
-      pixels->setPixelColor(i, pixels->Color(r, g, b));
+      pixels->setPixelColor(i, pixels->Color(g, r, b));
       pixels->show();
       mock_output(i, r, g, b);
       break;
@@ -150,4 +154,3 @@ void status(uint8_t state)
     }
   }
 }
-*/
