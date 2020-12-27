@@ -4,6 +4,12 @@
 #include "config.h"
 #include <Artnet.h>
 #include <Adafruit_NeoPixel.h>
+#ifdef ESP8266
+  #include <esp8266wifi.h>
+#elif defined(ESP32)
+  #include <Wifi.h>
+#endif
+//#include <ESP8266mDNS.h>        // Include the mDNS library
 
 ArtnetWiFiReceiver artnet;
 
