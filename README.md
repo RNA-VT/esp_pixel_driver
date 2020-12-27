@@ -29,7 +29,7 @@ Set the following values in `config.h` before uploading to your microcontroller.
 
 ### Pins
 
-Select your gpio outputs by uncommenting and setting the pointer `pixels_mapped` in `esp_pixel_driver.ino`.
+Select your gpio outputs by uncommenting and setting the pointer `pixels` in `esp_pixel_driver.ino`.
 
 ---
 
