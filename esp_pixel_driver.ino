@@ -3,13 +3,13 @@
 #include "config.h"
 #include <Artnet.h>
 #include <Adafruit_NeoPixel.h>
+#include <Esp.h>
+
 #ifdef ESP8266
   #include <esp8266wifi.h>
 #elif defined(ESP32)
   #include <WiFi.h>
 #endif
-
-#include <Esp.h>
 
 ArtnetWiFiReceiver artnet;
 
@@ -47,15 +47,22 @@ void setup_wifi()
   int count = 0;
   while (WiFi.status() != WL_CONNECTED && count < loop_limit)
   {
-    Serial.print("-~~<*}(~){*>~~-\n");
+    Serial.println("-~~<*}(~){*>~~-\n");
     delay(500);
     count++;
   }
   if (count == loop_limit) {
     ESP.restart();
   }
-  Serial.print("WiFi connected, IP = ");
+  Serial.println("WiFi connected, IP = ");
   Serial.println(WiFi.localIP());
+  delay(500);
+  //Multicast DNS
+  if (!MDNS.begin("idplaceholder.pixel.driver")) {             
+    Serial.println("Error setting up MDNS responder!");
+  }
+  Serial.println("mDNS responder started");
+  
 }
 
 void mock_output(int i, uint8_t r, uint8_t g, uint8_t b)
@@ -117,6 +124,9 @@ void setup()
   
   status(1);
 
+  pixels.begin();
+  pixels.clear();
+  
   artnet.begin();
   artnet.subscribe(UNIVERSE_PIXEL_MAPPED, pixel_mapping_subscriber);
 }
