@@ -1,5 +1,4 @@
 //The WiFi handlers must be enabled in ArtNet.h
-#define ESP8266 
 #define ARTNET_ENABLE_WIFI true
 #include "config.h"
 #include <Artnet.h>
@@ -7,9 +6,10 @@
 #ifdef ESP8266
   #include <esp8266wifi.h>
 #elif defined(ESP32)
-  #include <Wifi.h>
+  #include <WiFi.h>
 #endif
-//#include <ESP8266mDNS.h>        // Include the mDNS library
+
+#include <Esp.h>
 
 ArtnetWiFiReceiver artnet;
 
@@ -40,13 +40,19 @@ const IPAddress subnet(255, 255, 255, 0);
 
 void setup_wifi()
 {
-  WiFi.begin(WIFI_SSID, PASSWORD);
+  WiFi.begin("The Quiet Neighbor", "AllAboutThatBase");
+  WiFi.setSleep(false);
   WiFi.config(ip, gateway, subnet);
-
-  while (WiFi.status() != WL_CONNECTED)
+  int loop_limit = 60;
+  int count = 0;
+  while (WiFi.status() != WL_CONNECTED && count < loop_limit)
   {
     Serial.print("-~~<*}(~){*>~~-\n");
     delay(500);
+    count++;
+  }
+  if (count == loop_limit) {
+    ESP.restart();
   }
   Serial.print("WiFi connected, IP = ");
   Serial.println(WiFi.localIP());
