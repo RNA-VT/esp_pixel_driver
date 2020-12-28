@@ -30,21 +30,23 @@ const IPAddress subnet(255, 255, 255, 0);
 
 void setup()
 {
+  //LED Init
+  FastLED.addLeds<WS2812, OUTPUT_PIN, RGB>(leds, STRIP_LENGTH);
+
   //Serial Start
   Serial.begin(115200);
-
+  delay(500);
+  
   //Status - Connecting to Wifi
   status(0);
-
   setup_wifi();
   artnet.begin();
+  delay(500);
 
   //Status - Waiting for Artnet
   status(1);
-  
-  FastLED.addLeds<WS2812, OUTPUT_PIN, RGB>(leds, STRIP_LENGTH);
-
   artnet.setArtDmxCallback(onDmxFrame);
+  delay(500);
 }
 
 void loop()
@@ -138,7 +140,7 @@ void status(uint8_t state)
     default:
       break;
     }
-    
+
     if (OUTPUT_MODE == OUTPUT_MODE_LED)
     {
       leds[i] = CRGB(r, g, b);
@@ -150,17 +152,19 @@ void status(uint8_t state)
 
 void debug_led_output(int i, uint8_t r, uint8_t g, uint8_t b)
 {
-  if (LOG_LEVEL == LOG_LEVEL_DEBUG){
-  char buf[16]; //formatting buffer
-  sprintf(buf, "Pixel ID: %u", i);
-  Serial.println(buf);
+  if (LOG_LEVEL == LOG_LEVEL_DEBUG)
+  {
+    char buf[16]; //formatting buffer
+    sprintf(buf, "Pixel ID: %u", i);
+    Serial.println(buf);
 
-  sprintf(buf, "~~Green: %u", g);
-  Serial.println(buf);
+    sprintf(buf, "~~Green: %u", g);
+    Serial.println(buf);
 
-  sprintf(buf, "~~Red: %u", r);
-  Serial.println(buf);
+    sprintf(buf, "~~Red: %u", r);
+    Serial.println(buf);
 
-  sprintf(buf, "~~Blue: %u", b);
-  Serial.println(buf);}
+    sprintf(buf, "~~Blue: %u", b);
+    Serial.println(buf);
+  }
 }
