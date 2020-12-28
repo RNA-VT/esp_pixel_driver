@@ -17,19 +17,14 @@ The pixel mapped artnet subscriber expects 3 channels of color data per pixel to
 
 Set the following values in `config.h` before uploading to your microcontroller.
 
-| Parameter                      | Variable                   | Default          |
-| ------------------------------ | -------------------------- | ---------------- |
-| Output Mode                    | OUTPUT_MODE                | OUTPUT_MODE_LED  |
-| LED Max Strip Length           | STRIP_LENGTH               | 25               |
-| Pixel Mapped Output Enable     | ENABLE_PIXEL_MAPPED_OUTPUT | false            |
-| Pixel Mapped Universe Id       | UNIVERSE_PIXEL_MAPPED      | 1                |
-| Pixel Mapped DMX Start Channel | OFFSET_PIXEL_MAPPED        | 0                |
-
----
-
-### Pins
-
-Select your gpio outputs by uncommenting and setting the pointer `pixels` in `esp_pixel_driver.ino`.
+| Parameter        | Variable       | Default         |
+| ---------------- | -------------- | --------------- |
+| Output Mode      | OUTPUT_MODE    | OUTPUT_MODE_LED |
+| Output Pin       | OUTPUT_PIN     | 17              |
+| LED Strip Length | STRIP_LENGTH   | 25              |
+| Start Universe   | START_UNIVERSE | 1               |
+| Start Channel    | CHANNEL_OFFSET | 0               |
+| Serial Log Level | LOG_LEVEL      | LOG_LEVEL_DEBUG |
 
 ---
 

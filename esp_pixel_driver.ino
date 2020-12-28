@@ -1,49 +1,64 @@
-//The WiFi handlers must be enabled in ArtNet.h
-#define ARTNET_ENABLE_WIFI true
 #include "config.h"
-#include <Artnet.h>
-#include <Adafruit_NeoPixel.h>
+#include <Arduino.h>
+#include <ArtnetWifi.h>
+#include <FastLED.h>
 #include <Esp.h>
 
 #ifdef ESP8266
-  #include <esp8266wifi.h>
+#include <esp8266wifi.h>
 #elif defined(ESP32)
-  #include <WiFi.h>
+#include <WiFi.h>
 #endif
 
-ArtnetWiFiReceiver artnet;
+//LEDs
+CRGB leds[STRIP_LENGTH];
 
-//Adafruit_NeoPixel gpio0 = Adafruit_NeoPixel(STRIP_LENGTH, 0, NEO_GRB + NEO_KHZ800);
-//Adafruit_NeoPixel gpio1 = Adafruit_NeoPixel(STRIP_LENGTH, 1, NEO_GRB + NEO_KHZ800);
-//Adafruit_NeoPixel gpio2 = Adafruit_NeoPixel(STRIP_LENGTH, 2, NEO_GRB + NEO_KHZ800);
-//Adafruit_NeoPixel gpio3 = Adafruit_NeoPixel(STRIP_LENGTH, 3, NEO_GRB + NEO_KHZ800);
-//Adafruit_NeoPixel gpio4 = Adafruit_NeoPixel(STRIP_LENGTH, 4, NEO_GRB + NEO_KHZ800);
-//Adafruit_NeoPixel gpio5 = Adafruit_NeoPixel(STRIP_LENGTH, 5, NEO_GRB + NEO_KHZ800);
-//Adafruit_NeoPixel gpio6 = Adafruit_NeoPixel(STRIP_LENGTH, 6, NEO_GRB + NEO_KHZ800);
-//Adafruit_NeoPixel gpio7 = Adafruit_NeoPixel(STRIP_LENGTH, 7, NEO_GRB + NEO_KHZ800);
-//Adafruit_NeoPixel gpio8 = Adafruit_NeoPixel(STRIP_LENGTH, 8, NEO_GRB + NEO_KHZ800);
-//Adafruit_NeoPixel gpio9 = Adafruit_NeoPixel(STRIP_LENGTH, 9, NEO_GRB + NEO_KHZ800);
-//Adafruit_NeoPixel gpio10 = Adafruit_NeoPixel(STRIP_LENGTH, 10, NEO_GRB + NEO_KHZ800);
-//Adafruit_NeoPixel gpio11 = Adafruit_NeoPixel(STRIP_LENGTH, 11, NEO_GRB + NEO_KHZ800);
-//Adafruit_NeoPixel gpio12 = Adafruit_NeoPixel(STRIP_LENGTH, 12, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel gpio13 = Adafruit_NeoPixel(STRIP_LENGTH, 13, NEO_GRB + NEO_KHZ800);
-//Adafruit_NeoPixel gpio14 = Adafruit_NeoPixel(STRIP_LENGTH, 14, NEO_GRB + NEO_KHZ800);
-//Adafruit_NeoPixel gpio15 = Adafruit_NeoPixel(STRIP_LENGTH, 15, NEO_GRB + NEO_KHZ800);
-//Adafruit_NeoPixel gpio16 = Adafruit_NeoPixel(STRIP_LENGTH, 16, NEO_GRB + NEO_KHZ800);
+//Calculated Constants
+const int channels = STRIP_LENGTH * 3;
+const int maxUniverses = channels / 512 + ((channels % 512) ? 1 : 0);
 
-Adafruit_NeoPixel *pixels = &gpio13;
+//DMX Handler Globals
+ArtnetWifi artnet;
+bool universesReceived[maxUniverses];
+bool sendFrame = 1;
+int previousDataLength = 0;
 
 //Network Config
 const IPAddress ip(192, 168, 1, 200);
 const IPAddress gateway(192, 168, 1, 1);
 const IPAddress subnet(255, 255, 255, 0);
 
+void setup()
+{
+  //Serial Start
+  Serial.begin(115200);
+
+  //Status - Connecting to Wifi
+  status(0);
+
+  setup_wifi();
+  artnet.begin();
+
+  //Status - Waiting for Artnet
+  status(1);
+  
+  FastLED.addLeds<WS2812, OUTPUT_PIN, RGB>(leds, STRIP_LENGTH);
+
+  artnet.setArtDmxCallback(onDmxFrame);
+}
+
+void loop()
+{
+  artnet.read();
+  delay(5);
+}
+
 void setup_wifi()
 {
   WiFi.begin(WIFI_SSID, PASSWORD);
   WiFi.setSleep(false);
   WiFi.config(ip, gateway, subnet);
-  int loop_limit = 60;
+  int loop_limit = 30;
   int count = 0;
   while (WiFi.status() != WL_CONNECTED && count < loop_limit)
   {
@@ -51,7 +66,8 @@ void setup_wifi()
     delay(500);
     count++;
   }
-  if (count == loop_limit) {
+  if (count == loop_limit)
+  {
     ESP.restart();
   }
   Serial.println("WiFi connected, IP = ");
@@ -59,85 +75,51 @@ void setup_wifi()
   delay(500);
 }
 
-void mock_output(int i, uint8_t r, uint8_t g, uint8_t b)
+void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t *data)
+{
+  sendFrame = 1;
+
+  // Store which universe has got in
+  if ((universe - START_UNIVERSE) < maxUniverses)
   {
-    char buf[16]; //formatting buffer
-    sprintf(buf, "Pixel ID: %u", i);
-    Serial.println(buf);
-
-    sprintf(buf, "~~Green: %u", g);
-    Serial.println(buf);
-
-    sprintf(buf, "~~Red: %u", r);
-    Serial.println(buf);
-
-    sprintf(buf, "~~Blue: %u", b);
-    Serial.println(buf);
+    universesReceived[universe - START_UNIVERSE] = 1;
   }
 
-void pixel_mapping_subscriber(const uint8_t *data, const uint16_t size)
-{
-  const int pixels_per_channel = 3;
-  for (int i = 0; i < STRIP_LENGTH; i++)
+  for (int i = 0; i < maxUniverses; i++)
   {
-    int offset = OFFSET_PIXEL_MAPPED + i * pixels_per_channel;
-    //The order of the colors may vary by ArtNet source.
-    //We assume GRB here
-    uint8_t g = data[offset];
-    uint8_t r = data[offset + 1];
-    uint8_t b = data[offset + 2];
-
-    switch (OUTPUT_MODE)
+    if (universesReceived[i] == 0)
     {
-    case OUTPUT_MODE_LED:
-      pixels->setPixelColor(i, pixels->Color(g, r, b));
-      if (pixels->canShow())
-      {
-        pixels->show();
-      }
-      mock_output(i, r, g, b);
-      break;
-    case OUTPUT_MODE_MOCK:
-      mock_output(i, r, g, b);
+      //Serial.println("Broke");
+      sendFrame = 0;
       break;
     }
   }
+
+  // read universe and put into the right part of the display buffer
+  for (int i = 0; i < length / 3; i++)
+  {
+    int led = i + (universe - START_UNIVERSE) * (previousDataLength / 3);
+    if (led < STRIP_LENGTH && OUTPUT_MODE == OUTPUT_MODE_LED)
+    {
+      leds[led] = CRGB(data[i * 3], data[i * 3 + 1], data[i * 3 + 2]);
+      debug_led_output(i, data[i * 3], data[i * 3 + 1], data[i * 3 + 2]);
+    }
+  }
+  previousDataLength = length;
+
+  if (sendFrame)
+  {
+    FastLED.show();
+    // Reset universeReceived to 0
+    memset(universesReceived, 0, maxUniverses);
+  }
 }
-
-void setup()
-{
-  //Serial Start
-  Serial.begin(115200);
-
-  pixels->begin();
-  pixels->clear();
-  
-  status(0);
-
-  setup_wifi();
-  
-  status(1);
-
-  pixels.begin();
-  pixels.clear();
-  
-  artnet.begin();
-  artnet.subscribe(UNIVERSE_PIXEL_MAPPED, pixel_mapping_subscriber);
-}
-
-void loop()
-{
-  artnet.parse();
-  delay(10);
-}
-
 
 void status(uint8_t state)
 {
   const int pixels_per_channel = 3;
   for (int i = 0; i < STRIP_LENGTH; i++)
   {
-    int offset = OFFSET_PIXEL_MAPPED + i * pixels_per_channel;
     uint8_t g = 0;
     uint8_t r = 0;
     uint8_t b = 0;
@@ -152,21 +134,33 @@ void status(uint8_t state)
       b = 255;
       break;
     case 1:
-      g = 255;    
+      g = 255;
     default:
       break;
     }
-
-    switch (OUTPUT_MODE)
+    
+    if (OUTPUT_MODE == OUTPUT_MODE_LED)
     {
-    case OUTPUT_MODE_LED:
-      pixels->setPixelColor(i, pixels->Color(g, r, b));
-      pixels->show();
-      mock_output(i, r, g, b);
-      break;
-    case OUTPUT_MODE_MOCK:
-      mock_output(i, r, g, b);
-      break;
+      leds[i] = CRGB(r, g, b);
+      FastLED.show();
     }
+    debug_led_output(i, r, g, b);
   }
+}
+
+void debug_led_output(int i, uint8_t r, uint8_t g, uint8_t b)
+{
+  if (LOG_LEVEL == LOG_LEVEL_DEBUG){
+  char buf[16]; //formatting buffer
+  sprintf(buf, "Pixel ID: %u", i);
+  Serial.println(buf);
+
+  sprintf(buf, "~~Green: %u", g);
+  Serial.println(buf);
+
+  sprintf(buf, "~~Red: %u", r);
+  Serial.println(buf);
+
+  sprintf(buf, "~~Blue: %u", b);
+  Serial.println(buf);}
 }

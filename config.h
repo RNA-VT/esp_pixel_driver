@@ -1,14 +1,19 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include "util.h"
+// TODO: replace with Wifi manger form config
+
+#include "enums.h"
 
 #define OUTPUT_MODE OUTPUT_MODE_LED
-#define STRIP_LENGTH 25
+#define OUTPUT_PIN 17
+#define STRIP_LENGTH 250
 
 // Pixel Mapped Output Configuration
-#define UNIVERSE_PIXEL_MAPPED 1 //DMX Universe to listen in
-#define OFFSET_PIXEL_MAPPED 0 //DMX Start Channel
+#define START_UNIVERSE 1 //DMX Universe to listen in
+#define CHANNEL_OFFSET 0 //DMX Start Channel
+
+#define LOG_LEVEL LOG_LEVEL_STANDARD // 0: normal, 1: debug
 
 //Must define:
 /*
