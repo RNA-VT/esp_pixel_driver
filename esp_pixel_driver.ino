@@ -36,7 +36,7 @@ void setup()
   //Serial Start
   Serial.begin(115200);
   delay(500);
-  
+
   //Status - Connecting to Wifi
   status(0);
   setup_wifi();
@@ -81,7 +81,7 @@ void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t *d
 {
   sendFrame = 1;
 
-  // Store which universe has got in
+  // Mark received Universe
   if ((universe - START_UNIVERSE) < maxUniverses)
   {
     universesReceived[universe - START_UNIVERSE] = 1;
@@ -91,7 +91,7 @@ void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t *d
   {
     if (universesReceived[i] == 0)
     {
-      //Serial.println("Broke");
+      // if we're missing an expected universe, do not playback 
       sendFrame = 0;
       break;
     }
@@ -119,7 +119,6 @@ void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t *d
 
 void status(uint8_t state)
 {
-  const int pixels_per_channel = 3;
   for (int i = 0; i < STRIP_LENGTH; i++)
   {
     uint8_t g = 0;
@@ -144,9 +143,13 @@ void status(uint8_t state)
     if (OUTPUT_MODE == OUTPUT_MODE_LED)
     {
       leds[i] = CRGB(r, g, b);
-      FastLED.show();
     }
     debug_led_output(i, r, g, b);
+  }
+  if (OUTPUT_MODE == OUTPUT_MODE_LED)
+  {
+    delay(500);
+    FastLED.show();
   }
 }
 
