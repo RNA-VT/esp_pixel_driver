@@ -1,0 +1,60 @@
+version: 2.1
+parameters:
+  pixel-driver-version:
+    type: string
+    default: "0.0.1"
+orbs:
+  docker: circleci/docker@1.7.0
+executors:
+  docker-publisher:
+    docker:
+      - image: circleci/buildpack-deps:latest-alpine
+commands:
+  move-src:
+    steps:
+      - run:
+          name:  move src into project folder
+          command: |
+            mkdir esp_pixel_driver
+            cp *.* esp_pixel_driver/
+            cd esp_pixel_driver
+  deps-arduino:
+    steps:
+      - run:
+          name:  install arduino deps
+          command: |
+            arduino-cli lib install "ArtnetWifi"
+            arduino-cli lib install "FastLED"
+            arduino-cli lib install "WiFiManager"
+            arduino-cli lib install "ArduinoJson"
+
+jobs:
+  build:
+    docker:
+      - image: rnavt/esp32builder:1ff8208
+    steps:
+      - checkout
+      - move-src
+      - deps-arduino
+      - run:
+          name: build arduino binary
+          command: |
+            cd esp_pixel_driver
+            arduino-cli compile --fqbn esp32:esp32:esp32 --clean
+
+  lint:
+    docker:
+      - image: rnavt/esp32builder:1ff8208
+    steps:
+      - checkout
+      - move-src
+      - run:
+          command: |
+            cd esp_pixel_driver
+            arduino-lint
+workflows:
+  version: 2
+  pixel-driver-build:
+    jobs:
+      - lint
+      - build
