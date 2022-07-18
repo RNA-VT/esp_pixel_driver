@@ -1,75 +1,75 @@
 #include "config.h"
 #include <Arduino.h>
 #include <ArtnetWifi.h>
-#include <FastLED.h>
 #include <Esp.h>
-
+#include <FastLED.h>
+#include <WebServer.h>
 #ifdef ESP8266
 #include <esp8266wifi.h>
 #elif defined(ESP32)
 #include <WiFi.h>
 #endif
 
-//LEDs
+// LEDs
 CRGB leds[STRIP_LENGTH];
 
-//Calculated Constants
+// Calculated Constants
 const int channels = STRIP_LENGTH * 3;
 const int maxUniverses = channels / 512 + ((channels % 512) ? 1 : 0);
 
-//DMX Handler Globals
+// DMX Handler Globals
 ArtnetWifi artnet;
 bool universesReceived[maxUniverses];
 bool sendFrame = 1;
 int previousDataLength = 0;
 
-//Network Config
+// Network Config
 const IPAddress ip(192, 168, 1, 200);
 const IPAddress gateway(192, 168, 1, 1);
 const IPAddress subnet(255, 255, 255, 0);
 
-void setup()
-{
-  //LED Init
+// WebServer
+WebServer webserver(80);
+
+void setup() {
+  // LED Init
   FastLED.addLeds<WS2812, OUTPUT_PIN, RGB>(leds, STRIP_LENGTH);
 
-  //Serial Start
+  // Serial Start
   Serial.begin(115200);
   delay(500);
 
-  //Status - Connecting to Wifi
+  // Status - Connecting to Wifi
   status(0);
   setup_wifi();
   artnet.begin();
   delay(500);
 
-  //Status - Waiting for Artnet
+  setup_handlers();
+
+  // Status - Waiting for Artnet
   status(1);
   artnet.setArtDmxCallback(onDmxFrame);
   delay(500);
 }
 
-void loop()
-{
+void loop() {
   artnet.read();
   delay(5);
 }
 
-void setup_wifi()
-{
+void setup_wifi() {
   WiFi.begin(WIFI_SSID, PASSWORD);
   WiFi.setSleep(false);
   WiFi.config(ip, gateway, subnet);
   int loop_limit = 30;
   int count = 0;
-  while (WiFi.status() != WL_CONNECTED && count < loop_limit)
-  {
+  while (WiFi.status() != WL_CONNECTED && count < loop_limit) {
     Serial.println("-~~<*}(~){*>~~-\n");
     delay(500);
     count++;
   }
-  if (count == loop_limit)
-  {
+  if (count == loop_limit) {
     ESP.restart();
   }
   Serial.println("WiFi connected, IP = ");
@@ -77,50 +77,57 @@ void setup_wifi()
   delay(500);
 }
 
-void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t *data)
-{
+void handle_hello() { webserver.send(200, "text/plain", "Pixel Server Root"); }
+
+void handle_health() { webserver.send(200, "text/plain", "Healthy"); }
+
+void handle_specification() { webserver.send(200, "application/json", ""); }
+
+void handle_NotFound() { webserver.send(404, "text/plain", "Not found"); }
+
+void setup_handlers() {
+  webserver.on("/", handle_hello);
+  webserver.on("/specification", handle_specification);
+  webserver.on("/health", handle_health);
+  webserver.onNotFound(handle_NotFound);
+}
+
+void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence,
+                uint8_t *data) {
   sendFrame = 1;
 
   // Mark received Universe
-  if ((universe - START_UNIVERSE) < maxUniverses)
-  {
+  if ((universe - START_UNIVERSE) < maxUniverses) {
     universesReceived[universe - START_UNIVERSE] = 1;
   }
 
-  for (int i = 0; i < maxUniverses; i++)
-  {
-    if (universesReceived[i] == 0)
-    {
-      // if we're missing an expected universe, do not playback 
+  for (int i = 0; i < maxUniverses; i++) {
+    if (universesReceived[i] == 0) {
+      // if we're missing an expected universe, do not playback
       sendFrame = 0;
       break;
     }
   }
 
   // read universe and put into the right part of the display buffer
-  for (int i = 0; i < length / 3; i++)
-  {
+  for (int i = 0; i < length / 3; i++) {
     int led = i + (universe - START_UNIVERSE) * (previousDataLength / 3);
-    if (led < STRIP_LENGTH && OUTPUT_MODE == OUTPUT_MODE_LED)
-    {
+    if (led < STRIP_LENGTH && OUTPUT_MODE == OUTPUT_MODE_LED) {
       leds[led] = CRGB(data[i * 3], data[i * 3 + 1], data[i * 3 + 2]);
       debug_led_output(i, data[i * 3], data[i * 3 + 1], data[i * 3 + 2]);
     }
   }
   previousDataLength = length;
 
-  if (sendFrame)
-  {
+  if (sendFrame) {
     FastLED.show();
     // Reset universeReceived to 0
     memset(universesReceived, 0, maxUniverses);
   }
 }
 
-void status(uint8_t state)
-{
-  for (int i = 0; i < STRIP_LENGTH; i++)
-  {
+void status(uint8_t state) {
+  for (int i = 0; i < STRIP_LENGTH; i++) {
     uint8_t g = 0;
     uint8_t r = 0;
     uint8_t b = 0;
@@ -128,8 +135,7 @@ void status(uint8_t state)
     // States
     // 0 - Connecting to Wifi
     // 1 - Waiting For ArtNet
-    switch (state)
-    {
+    switch (state) {
     case 0:
       r = 255;
       b = 255;
@@ -140,24 +146,20 @@ void status(uint8_t state)
       break;
     }
 
-    if (OUTPUT_MODE == OUTPUT_MODE_LED)
-    {
+    if (OUTPUT_MODE == OUTPUT_MODE_LED) {
       leds[i] = CRGB(r, g, b);
     }
     debug_led_output(i, r, g, b);
   }
-  if (OUTPUT_MODE == OUTPUT_MODE_LED)
-  {
+  if (OUTPUT_MODE == OUTPUT_MODE_LED) {
     delay(500);
     FastLED.show();
   }
 }
 
-void debug_led_output(int i, uint8_t r, uint8_t g, uint8_t b)
-{
-  if (LOG_LEVEL == LOG_LEVEL_DEBUG)
-  {
-    char buf[16]; //formatting buffer
+void debug_led_output(int i, uint8_t r, uint8_t g, uint8_t b) {
+  if (LOG_LEVEL == LOG_LEVEL_DEBUG) {
+    char buf[16]; // formatting buffer
     sprintf(buf, "Pixel ID: %u", i);
     Serial.println(buf);
 
